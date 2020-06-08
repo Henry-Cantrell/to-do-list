@@ -106,25 +106,19 @@ export let projDeleteButtonMaker = () => {
 
     const tableDiv = document.getElementById(`tableDiv${counter}`);
 
-    tableDiv.appendChild(deleteButton);
+    projDeleteController(deleteButton, divMaster, tableDiv)
 
+    tableDiv.appendChild(deleteButton);
+}
+
+export let projDeleteController = (deleteButton, divMaster, tableDiv) => {
     deleteButton.addEventListener ('click', () => {
-        console.log(tableDiv)
         divMaster.removeChild(tableDiv)
     }
     )
 }
 
-export let todoButtonMaker = () => {
-    const todoButton = document.createElement('button');
-    todoButton.id = `todoButton${counter}`;
-    todoButton.textContent = 'Add a to-do item'
-
-    const todoButtonMaker = document.getElementById(`tableDiv${counter}`);
-
-    todoButtonMaker.appendChild(todoButton);
-
-    let todoButtonController = () => {
+export let todoButtonController = (todoButton, tableDiv) => {
 
     todoButton.addEventListener('click', () => {
         
@@ -140,60 +134,98 @@ export let todoButtonMaker = () => {
         todoNotes.placeholder = 'Add any notes that you like'
         todoNotes.id = `todoNotes${counter}`
 
-        todoButtonMaker.appendChild(todoTitle)
-        todoButtonMaker.appendChild(todoDueDate)
-        todoButtonMaker.appendChild(todoNotes)
+        const thisTitle = todoTitle
+        const thisDueDate = todoDueDate
+        const thisNotes = todoNotes
 
-        const addButton = document.createElement('button')
-        addButton.textContent = 'Save to-do list'
+        tableDiv.appendChild(todoTitle)
+        tableDiv.appendChild(todoDueDate)
+        tableDiv.appendChild(todoNotes)
 
-        todoButtonMaker.appendChild(addButton)
+        addButtonMaker(tableDiv, thisTitle, thisDueDate, thisNotes)
+    })}
 
-        addButton.addEventListener('click', () => {
+export let addButtonMaker = (tableDiv, todoTitle, todoDueDate, todoNotes) => {
+    const addButton = document.createElement('button')
 
-            todoCounter++
+    const divTable = tableDiv
 
-            const newTodo = todoFactory((document.getElementById(`todoTitle${counter}`).value), (document.getElementById(`todoDueDate${counter}`).value), (document.getElementById(`todoNotes${counter}`).value))
+    console.log(divTable)
+    
+    addButton.textContent = 'Save to-do list'
 
-            const todoTable = document.createElement('table')
-            todoTable.id = (`todoTable${todoCounter}`)
-            const todoRow = document.createElement('row')
+    addButtonController(addButton, divTable, todoTitle, todoDueDate, todoNotes)
 
-            const todoCellOne = document.createElement('td')
-            todoCellOne.textContent = newTodo.todoTitle
+    tableDiv.appendChild(addButton)
+}
 
-            const todoCellTwo = document.createElement('td')
-            todoCellTwo.textContent = newTodo.todoDueDate
+export let addButtonController = (addButton, tableDiv, todoTitle, todoDueDate, todoNotes) => {
 
-            const todoCellThree = document.createElement('td')
-            todoCellThree.textContent = newTodo.todoNotes
+    addButton.addEventListener('click', () => {
 
-            todoButtonMaker.removeChild(todoTitle)
-            todoButtonMaker.removeChild(todoDueDate)
-            todoButtonMaker.removeChild(todoNotes)
-            todoButtonMaker.removeChild(addButton)
+        todoCounter++
 
-            if (todoCellOne.textContent != "") {todoRow.appendChild(todoCellOne)}
-            if (todoCellTwo.textContent != "") {todoRow.appendChild(todoCellTwo)}
-            if (todoCellThree.textContent != "") {todoRow.appendChild(todoCellThree)}
+        const newTodo = todoFactory((document.getElementById(`todoTitle${counter}`).value), (document.getElementById(`todoDueDate${counter}`).value), (document.getElementById(`todoNotes${counter}`).value))
 
-            todoTable.appendChild(todoRow)
-            todoButtonMaker.appendChild(todoTable)
-            
-            let deleteButtonMaker = () => {
+        console.log(newTodo)
 
-            const todoDeleteButton = document.createElement('button')
-        todoDeleteButton.textContent = 'Delete this todo item'
-        todoDeleteButton.id = `todoDeleteButton${todoCounter}`
+        const todoTable = document.createElement('table')
+        todoTable.id = (`todoTable${todoCounter}`)
+        const todoRow = document.createElement('row')
 
-        todoTable.appendChild(todoDeleteButton);
+        const todoCellOne = document.createElement('td')
+        todoCellOne.textContent = newTodo.todoTitle
 
-        todoDeleteButton.addEventListener('click', () => {
-        todoButtonMaker.removeChild(todoTable)
-    })} 
-       deleteButtonMaker() })
-    })} 
-todoButtonController()}
+        const todoCellTwo = document.createElement('td')
+        todoCellTwo.textContent = newTodo.todoDueDate
+
+        const todoCellThree = document.createElement('td')
+        todoCellThree.textContent = newTodo.todoNotes
+
+        tableDiv.removeChild(todoTitle)
+        tableDiv.removeChild(todoDueDate)
+        tableDiv.removeChild(todoNotes)
+        tableDiv.removeChild(addButton)
+
+        if (todoCellOne.textContent != "") {todoRow.appendChild(todoCellOne)}
+        if (todoCellTwo.textContent != "") {todoRow.appendChild(todoCellTwo)}
+        if (todoCellThree.textContent != "") {todoRow.appendChild(todoCellThree)}
+
+        todoTable.appendChild(todoRow)
+        tableDiv.appendChild(todoTable)
+
+        deleteButtonMaker(todoTable, tableDiv)
+        
+})}
+
+export let deleteButtonMaker = (todoTable, tableDiv) => {
+    const todoDeleteButton = document.createElement('button')
+    todoDeleteButton.textContent = 'Delete this todo item'
+    todoDeleteButton.id = (`todoDeleteButton${todoCounter}`)
+
+    deleteButtonController(todoDeleteButton, todoTable, tableDiv)
+
+    todoTable.appendChild(todoDeleteButton);
+}
+
+export let deleteButtonController = (todoDeleteButton, todoTable, tableDiv) => {
+    todoDeleteButton.addEventListener('click', () => {
+        tableDiv.removeChild(todoTable)
+    })
+}
+
+export let todoButtonMaker = () => {
+    const todoButton = document.createElement('button');
+    todoButton.id = (`todoButton${counter}`);
+    todoButton.textContent = 'Add a to-do item'
+
+    const todoButtonMaker = document.getElementById(`tableDiv${counter}`);
+
+    todoButtonController(todoButton, todoButtonMaker);
+
+    todoButtonMaker.appendChild(todoButton);
+}
+
 
 export let projectFactory = (projName, notes, dueDate, description) => {
     return {projName, notes, dueDate, description};
